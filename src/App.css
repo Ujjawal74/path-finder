@@ -1,0 +1,246 @@
+.container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  color: #000;
+  background: rgb(255, 255, 255);
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  height: 7vh;
+  width: 100%;
+  background: lightcoral;
+  padding: 5px;
+}
+.navbar h1 {
+  font-weight: 500;
+  font-style: italic;
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.grid .source {
+  color: green;
+}
+
+.grid .destination {
+  color: blue;
+}
+
+.grid .wall {
+  color: #f99292;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.grid .painted {
+  background: rgb(250, 250, 118);
+}
+
+.block-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  width: 90%;
+  height: auto;
+}
+
+.block-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-basis: 21px;
+  height: 21px;
+  background: rgb(234, 255, 225);
+  border: 0.5px solid black;
+  border-radius: 1px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  cursor: pointer;
+}
+
+.navbar select {
+  padding: 10px;
+  outline: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.navbar .title {
+  margin-right: auto;
+}
+
+.navbar .actions {
+  display: flex;
+}
+.navbar div {
+  margin: 0 5px;
+}
+
+.navbar button {
+  padding: 10px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.navbar button:hover {
+  background: rgb(209, 255, 253);
+  border-bottom: 5px solid blue;
+}
+
+/* Animations of ripple */
+
+.ripple {
+  background: rgb(26, 188, 156);
+  animation: ripple 2s ease;
+  z-index: 1;
+}
+@keyframes ripple {
+  0% {
+    box-shadow: inset 0em 0em 0em 1em rgb(165, 113, 254);
+  }
+  100% {
+    box-shadow: inset 0em 0em 0em 0em rgb(250, 250, 118), 4px 0 8px blue,
+      -4px 0 8px red;
+  }
+}
+
+/* section of info */
+
+.info {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+}
+
+.info div {
+  width: 80%;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  padding: 10px;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.impInfo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+  font-style: italic;
+  padding: 5px;
+}
+.impInfo div {
+  margin: 0 2px;
+  padding: 5px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+}
+.impInfo div:nth-child(1) {
+  border-bottom: 2px solid orange;
+}
+
+.impInfo div:nth-child(2) {
+  border-bottom: 2px solid blueviolet;
+}
+
+/* @media only screen and (max-width: 1024px) {
+  .block-container {
+    width: 95%;
+  }
+  .block {
+    flex-basis: 12px;
+    height: 12px;
+  }
+}
+
+@media only screen and (max-width: 1024px) and (min-width: 724px) {
+  .block-container {
+    width: 95%;
+  }
+  .block {
+    flex-basis: 12px;
+    height: 12px;
+  }
+} */
+
+@media only screen and (max-width: 576px) {
+  .navbar .title {
+    display: none;
+  }
+
+  .grid .source i {
+    font-size: 10px;
+  }
+  .grid .destination i {
+    font-size: 10px;
+  }
+  .grid .wall i {
+    font-size: 10px;
+  }
+
+  .block-container {
+    width: 100%;
+    transform: rotate(90deg) translate(40%, 0);
+  }
+  .block-row {
+    width: 200%;
+  }
+  .block {
+    flex-basis: 12px;
+    height: 12px;
+    border-radius: 0;
+  }
+
+  .info {
+    transform: translate(0, 250%);
+  }
+}
+
+@media only screen and (max-width: 456px) {
+  .navbar {
+    z-index: 1;
+  }
+
+  .block-container {
+    width: 100%;
+    transform: rotate(90deg) translate(42%, 0);
+  }
+  .block-row {
+    width: 200%;
+  }
+  .block {
+    flex-basis: 11px;
+    height: 11px;
+    border-radius: 0;
+  }
+
+  .info {
+    transform: translate(0, 170%);
+  }
+}
