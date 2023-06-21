@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/path-finder/static/css/main.d236dbe0.css",
+    "main.js": "/path-finder/static/js/main.c6f61f18.js",
+    "index.html": "/path-finder/index.html",
+    "main.d236dbe0.css.map": "/path-finder/static/css/main.d236dbe0.css.map",
+    "main.c6f61f18.js.map": "/path-finder/static/js/main.c6f61f18.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d236dbe0.css",
+    "static/js/main.c6f61f18.js"
+  ]
+}
