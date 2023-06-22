@@ -169,26 +169,6 @@
   border-bottom: 2px solid blueviolet;
 }
 
-/* @media only screen and (max-width: 1024px) {
-  .block-container {
-    width: 95%;
-  }
-  .block {
-    flex-basis: 12px;
-    height: 12px;
-  }
-}
-
-@media only screen and (max-width: 1024px) and (min-width: 724px) {
-  .block-container {
-    width: 95%;
-  }
-  .block {
-    flex-basis: 12px;
-    height: 12px;
-  }
-} */
-
 @media only screen and (max-width: 576px) {
   .navbar .title {
     display: none;
@@ -244,3 +224,14 @@
     transform: translate(0, 170%);
   }
 }
+
+/*
+Created By: Connect/Follow me on LinkedIn.
+=> https://www.linkedin.com/in/ujjawal-biswas-b40611142/
+          _   _                         _  _      _                           
+  _   _  (_) (_)  __ _ __      __ __ _ | || |__  (_) ___ __      __ __ _  ___ 
+ | | | | | | | | / _` |\ \ /\ / // _` || || '_ \ | |/ __|\ \ /\ / // _` |/ __|
+ | |_| | | | | || (_| | \ V  V /| (_| || || |_) || |\__ \ \ V  V /| (_| |\__ \
+  \__,_|_/ |_/ | \__,_|  \_/\_/  \__,_||_||_.__/ |_||___/  \_/\_/  \__,_||___/
+       |__/|__/                                                                                                                                                                               
+*/
