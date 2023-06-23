@@ -17,8 +17,7 @@ function sleep(ms) {
 
 const dijkstra = async (grid, setGrid, source, destination, setDisabled) => {
   setDisabled(true);
-
-  const unvisitedArray = createUnvisitedArray(grid);
+  const unvisitedArray = createUnvisitedArray(grid, source);
 
   while (unvisitedArray.length > 0) {
     let shortestUnvisitedVertex = unvisitedArray.shift();
@@ -47,6 +46,7 @@ const dijkstra = async (grid, setGrid, source, destination, setDisabled) => {
     grid[destination.x][destination.y].distance < Infinity
   ) {
     let shortestPath = grid[destination.x][destination.y].shortest_path;
+    shortestPath = [...shortestPath, [destination.x, destination.y]];
     await animateShortestPath(grid, setGrid, shortestPath, destination);
     setDisabled(false);
   } else {
@@ -122,8 +122,8 @@ const animateShortestPath = async (
     let y = shortestPath[i][1];
 
     temp[x][y].painted = true;
-    if (i == shortestPath.length - 1) {
-      temp[destination.x][destination.y].painted = true;
+    if (i != 0 && i != shortestPath.length - 1) {
+      temp[x][y].value = i;
     }
     await sleep(50);
     setGrid([...temp]);
@@ -134,13 +134,17 @@ const sortArray = (array) => {
   array.sort((a, b) => a.distance - b.distance);
 };
 
-const createUnvisitedArray = (grid) => {
+const createUnvisitedArray = (grid, source) => {
   let array = []; // array of m*n size
   for (let i = 0; i < grid.length; i++) {
     for (let j = 0; j < grid[0].length; j++) {
+      if (i == source.x && j == source.y) {
+        grid[i][j].distance = 0;
+      }
       array.push(grid[i][j]);
     }
   }
+
   sortArray(array);
   return array;
 };
@@ -203,10 +207,10 @@ const aStar = async (grid, setGrid, source, destination, setDisabled) => {
     let minNode = pq.shift();
     let id = minNode.row + "-" + minNode.col;
 
-    if (m[id] == true) {
-      continue;
-    }
-    m[id] = true;
+    // if (m[id] == true) {
+    //   continue;
+    // }
+    // m[id] = true;
 
     if (minNode.row == destination.x && minNode.col == destination.y) {
       break;

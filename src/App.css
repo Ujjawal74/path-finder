@@ -78,6 +78,11 @@
   cursor: pointer;
 }
 
+.block p {
+  font-size: 12px;
+  color: grey;
+}
+
 .navbar select {
   padding: 10px;
   outline: none;
@@ -170,6 +175,11 @@
 }
 
 @media only screen and (max-width: 576px) {
+  .block p {
+    font-size: 5px;
+    color: grey;
+  }
+
   .navbar .title {
     display: none;
   }
@@ -203,6 +213,11 @@
 }
 
 @media only screen and (max-width: 456px) {
+  .block p {
+    font-size: 5px;
+    color: grey;
+  }
+
   .navbar {
     z-index: 1;
   }

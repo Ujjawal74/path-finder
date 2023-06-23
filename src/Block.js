@@ -18,7 +18,7 @@ const Block = ({
   }
   if (block.painted) {
     paintClass = "painted";
-  }
+  } 
   return (
     <div
       onClick={() => handleBlockClick(block)}
@@ -29,6 +29,7 @@ const Block = ({
       {block.isSource ? <i className="fa fa-smile"></i> : <></>}
       {block.isDestination ? <i className="fa fa-map-marker-alt"></i> : <></>}
       {block.isWall ? <i className="fa fa-skull-crossbones"></i> : <></>}
+      <p>{block.value > 0 ? block.value : <></>}</p>
     </div>
   );
 };

@@ -3,6 +3,7 @@ export const data = [
     algo: "Dijkstra's Algorithm",
     time: "Time Complexity (Efficient) : O((v+e)logv)",
     theory: `Father of all path finding algorithms.
+              Guarantees shortest path between source to destination.
                Finds least possible distance to destination.
                Execution spreads like a flower pattern in all directions. 
                Computes least possible distance from source to all vertices till the destination is reached.`,

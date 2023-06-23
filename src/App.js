@@ -2,7 +2,7 @@ import "./App.css";
 import Grid from "./Grid";
 import Navbar from "./Navbar";
 import { useState, useEffect } from "react";
-import { dijkstra, aStar } from "./algorithms";
+import { dijkstra, aStar, sleep } from "./algorithms";
 import { data } from "./data";
 
 function App() {
@@ -45,7 +45,6 @@ function App() {
   };
 
   const handleBlockClick = (block) => {
-    // console.log(block);
     let temp = [...grid];
 
     if (block.isSource) {
@@ -77,6 +76,7 @@ function App() {
   };
 
   const handleOnMouseEnter = (block) => {
+    if (!sourceFree && !destinationFree && !wallMode) return;
     let temp = [...grid];
     if (sourceFree) {
       temp[source.x][source.y].isSource = false;
@@ -100,7 +100,9 @@ function App() {
   };
 
   const handleOnMouseLeave = (block) => {
+    if (!sourceFree && !destinationFree && !wallMode) return;
     let temp = [...grid];
+
     if (sourceFree) {
       temp[block.x][block.y].isSource = false;
       setGrid([...temp]);
@@ -114,7 +116,7 @@ function App() {
   useEffect(() => {
     let grid = getGrid();
     setGrid(grid);
-  }, [source]);
+  }, []);
 
   const createBlock = (x, y) => {
     return {
@@ -124,10 +126,11 @@ function App() {
       isDestination: x == destination.x && y == destination.y,
       isWall: false,
       visited: false,
-      distance: x == source.x && y == source.y ? 0 : Infinity,
+      distance: Infinity,
       shortest_path: [],
       painted: false,
       animate: false,
+      value: 0,
     };
   };
 
@@ -142,6 +145,19 @@ function App() {
       grid.push(row);
     }
     return grid;
+  };
+
+  const storeLastMatrix = (temp) => {
+    let res = [];
+    let copy = temp.slice(0);
+    for (let i = 0; i < copy.length; i++) {
+      let row = [];
+      for (let j = 0; j < copy[0].length; j++) {
+        const a = { ...copy[i][j] };
+        row.push(a);
+      }
+      res.push(row);
+    }
   };
 
   return (
