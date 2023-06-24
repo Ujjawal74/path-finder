@@ -131,6 +131,7 @@ function App() {
       painted: false,
       animate: false,
       value: 0,
+      vertex: null,
     };
   };
 

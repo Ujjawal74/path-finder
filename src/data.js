@@ -12,6 +12,7 @@ export const data = [
     algo: "A* Algorithm",
     time: "Time Complexity (Efficient) : O((w*h)log(w*h))",
     theory: `It is the fastest possible path finding algorithm.
+              Guarantees shortest path between source to destination.
                It is a destination oriented algorithm.
                 It computes manhattan distance from every vertex to destination.
                 It prepares a heuristic value for every vertex.

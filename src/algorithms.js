@@ -9,6 +9,8 @@ Created By: Connect/Follow me on LinkedIn.
        |__/|__/                                                                                                                                                                               
 */
 
+let { MinHeap, MinHeap2 } = require("./minheap");
+
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -17,10 +19,10 @@ function sleep(ms) {
 
 const dijkstra = async (grid, setGrid, source, destination, setDisabled) => {
   setDisabled(true);
-  const unvisitedArray = createUnvisitedArray(grid, source);
+  const minHeap = createMinHeap(grid, source);
 
-  while (unvisitedArray.length > 0) {
-    let shortestUnvisitedVertex = unvisitedArray.shift();
+  while (!minHeap.isEmpty()) {
+    let shortestUnvisitedVertex = minHeap.remove();
     grid[shortestUnvisitedVertex.x][shortestUnvisitedVertex.y].visited = true;
 
     if (shortestUnvisitedVertex.distance == Infinity) {
@@ -31,7 +33,7 @@ const dijkstra = async (grid, setGrid, source, destination, setDisabled) => {
     breakFound = await visitItsAdjacentVertices(
       grid,
       shortestUnvisitedVertex,
-      unvisitedArray,
+      minHeap,
       destination,
       setGrid,
       breakFound
@@ -58,7 +60,7 @@ const dijkstra = async (grid, setGrid, source, destination, setDisabled) => {
 const visitItsAdjacentVertices = async (
   grid,
   shortestUnvisitedVertex,
-  unvisitedArray,
+  minHeap,
   destination,
   setGrid,
   breakFound
@@ -93,9 +95,12 @@ const visitItsAdjacentVertices = async (
 
       if (block.distance > shortestUnvisitedVertex.distance + 1) {
         block.distance = shortestUnvisitedVertex.distance + 1;
+        block.shortest_path.push(...past_path, [x, y]);
 
-        grid[xf][yf].shortest_path.push(...past_path, [x, y]);
-        sortArray(unvisitedArray);
+        // update min heap
+        let currentVertex = grid[xf][yf].vertex;
+        let value = shortestUnvisitedVertex.distance + 1;
+        minHeap.update(currentVertex, value);
       }
 
       if (xf == destination.x && yf == destination.y) {
@@ -130,23 +135,22 @@ const animateShortestPath = async (
   }
 };
 
-const sortArray = (array) => {
-  array.sort((a, b) => a.distance - b.distance);
-};
-
-const createUnvisitedArray = (grid, source) => {
+const createMinHeap = (grid, source) => {
   let array = []; // array of m*n size
+  let vertex = 0;
   for (let i = 0; i < grid.length; i++) {
     for (let j = 0; j < grid[0].length; j++) {
-      if (i == source.x && j == source.y) {
-        grid[i][j].distance = 0;
-      }
+      grid[i][j].vertex = vertex;
+      vertex = vertex + 1;
       array.push(grid[i][j]);
     }
   }
 
-  sortArray(array);
-  return array;
+  // settings initial source
+  let sourceNode = grid[source.x][source.y].vertex;
+  let minHeap = new MinHeap(array);
+  minHeap.update(sourceNode, 0);
+  return minHeap;
 };
 
 // A* Algorithm
@@ -159,6 +163,7 @@ class Node {
     this.h = Infinity;
     this.f = Infinity;
     this.cameFrom = null; // self referential
+    this.vertex = null;
   }
 }
 
@@ -173,44 +178,40 @@ const aStar = async (grid, setGrid, source, destination, setDisabled) => {
   for (let i = 0; i < cols; i++) {
     graphNodes[i] = new Array(cols).fill(null);
   }
-  let pq = []; // priority queue
-  let m = {}; // map of visited
 
+  let vertex = 0;
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
       if (grid[i][j].isWall) {
         continue;
       }
       let block = new Node();
+      block.id = i + "-" + j;
       block.row = i;
       block.col = j;
       block.g = Infinity;
       block.h = Infinity;
       block.f = Infinity;
       block.cameFrom = null;
+      block.vertex = vertex;
 
+      vertex = vertex + 1;
       graphNodes[i][j] = block;
     }
   }
 
   // settings source's default properties
-  let block = graphNodes[source.x][source.y];
-  block.g = 0;
-  block.h =
+  let sourceNode = graphNodes[source.x][source.y];
+  sourceNode.g = 0;
+  sourceNode.h =
     Math.abs(source.x - destination.x) + Math.abs(source.y - destination.y);
-  block.f = block.g + block.h;
+  sourceNode.f = sourceNode.g + sourceNode.h;
 
-  pq.push(block);
-  sortPq(pq);
+  let minHeap = new MinHeap2();
+  minHeap.insert(sourceNode);
 
-  while (pq.length > 0) {
-    let minNode = pq.shift();
-    let id = minNode.row + "-" + minNode.col;
-
-    // if (m[id] == true) {
-    //   continue;
-    // }
-    // m[id] = true;
+  while (!minHeap.isEmpty()) {
+    let minNode = minHeap.remove();
 
     if (minNode.row == destination.x && minNode.col == destination.y) {
       break;
@@ -243,8 +244,11 @@ const aStar = async (grid, setGrid, source, destination, setDisabled) => {
           currNode.f = currNode.g + currNode.h;
 
           currNode.cameFrom = minNode;
-          pq.push(currNode);
-          sortPq(pq);
+          if (!minHeap.containsNode(currNode)) {
+            minHeap.insert(currNode);
+          } else {
+            minHeap.update(currNode);
+          }
         } else {
           continue;
         }
