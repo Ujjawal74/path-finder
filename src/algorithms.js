@@ -98,20 +98,19 @@ class MinHeap {
 
 class MinHeap2 {
   constructor(array) {
-    this.vertexMap = {};
-    this.heap = [];
+    this.vertexMap = this.createVertexMap(array);
+    this.heap = this.buildHeap(array);
   }
 
-  // add one by one that's why not using
   createVertexMap = (array) => {
     let vertexMap = {};
     for (let i = 0; i < array.length; i++) {
-      vertexMap[i] = i;
+      let node = array[i];
+      vertexMap[node.vertex] = node.vertex;
     }
     return vertexMap;
   };
 
-  // add one by one that's why not using
   buildHeap = (array) => {
     const firstParentIdx = Math.floor((array.length - 2) / 2);
     for (let i = firstParentIdx; i >= 0; i--) {
@@ -180,12 +179,10 @@ class MinHeap2 {
   update = (node) => {
     // new updated value is lower that's why siftup
     let obj = this.heap[this.vertexMap[node.vertex]];
-    obj.f = node.value;
+    // update f and g [node.g and node.f]
+    obj.g = node.g;
+    obj.f = node.f;
     this.siftUp(this.vertexMap[node.vertex], this.heap);
-  };
-
-  containsNode = (node) => {
-    return node.vertex in this.vertexMap;
   };
 }
 
@@ -354,39 +351,40 @@ const aStar = async (grid, setGrid, source, destination, setDisabled) => {
 
   let graphNodes = new Array(rows); // 2d matrix of nodes
   for (let i = 0; i < cols; i++) {
-    graphNodes[i] = new Array(cols).fill(null);
+    graphNodes[i] = new Array(cols);
   }
 
   let vertex = 0;
+  let arrayOfNodes = [];
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
-      if (grid[i][j].isWall) {
-        continue;
-      }
       let block = new Node();
-      block.id = i + "-" + j;
       block.row = i;
       block.col = j;
       block.g = Infinity;
-      block.h = Infinity;
+      block.h = Math.abs(i - destination.x) + Math.abs(j - destination.y);
       block.f = Infinity;
       block.cameFrom = null;
-      block.vertex = vertex;
+      block.vertex = vertex; // in place of id
+      block.isWall = false;
+      if (grid[i][j].isWall) {
+        block.isWall = true;
+      }
 
       vertex = vertex + 1;
       graphNodes[i][j] = block;
+      arrayOfNodes.push(block);
     }
   }
 
   // settings source's default properties
-  let sourceNode = graphNodes[source.x][source.y];
+  let sourceVertex = graphNodes[source.x][source.y].vertex;
+  let sourceNode = arrayOfNodes[sourceVertex];
   sourceNode.g = 0;
-  sourceNode.h =
-    Math.abs(source.x - destination.x) + Math.abs(source.y - destination.y);
   sourceNode.f = sourceNode.g + sourceNode.h;
 
-  let minHeap = new MinHeap2();
-  minHeap.insert(sourceNode);
+  let minHeap = new MinHeap2(arrayOfNodes);
+  minHeap.update(sourceNode); // btw its already set from initial array
 
   while (!minHeap.isEmpty()) {
     let minNode = minHeap.remove();
@@ -394,7 +392,7 @@ const aStar = async (grid, setGrid, source, destination, setDisabled) => {
     if (minNode.row == destination.x && minNode.col == destination.y) {
       break;
     }
-
+    // visit neighbours
     let factors = [
       [0, 1],
       [0, -1],
@@ -410,23 +408,17 @@ const aStar = async (grid, setGrid, source, destination, setDisabled) => {
 
       if (x >= 0 && x < rows && y >= 0 && y < cols) {
         let currNode = graphNodes[x][y];
-        if (currNode == null) continue;
+        if (currNode.isWall) continue;
 
         temp[x][y].animate = true;
         setGrid([...temp]);
 
         if (currNode.g > minNode.g + 1) {
           currNode.g = minNode.g + 1;
-          currNode.h =
-            Math.abs(x - destination.x) + Math.abs(y - destination.y);
           currNode.f = currNode.g + currNode.h;
 
           currNode.cameFrom = minNode;
-          if (!minHeap.containsNode(currNode)) {
-            minHeap.insert(currNode);
-          } else {
-            minHeap.update(currNode);
-          }
+          minHeap.update(currNode);
         } else {
           continue;
         }
@@ -455,10 +447,6 @@ const aStar = async (grid, setGrid, source, destination, setDisabled) => {
   await animateShortestPath(grid, setGrid, path, destination);
   setDisabled(false);
   return path;
-};
-
-const sortPq = (array) => {
-  array.sort((a, b) => a.h - b.h);
 };
 
 export { sleep, dijkstra, aStar };
