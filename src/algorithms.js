@@ -227,7 +227,7 @@ const dijkstra = async (grid, setGrid, source, destination, setDisabled) => {
     await animateShortestPath(grid, setGrid, shortestPath, destination);
     setDisabled(false);
   } else {
-    alert("Destination is Unreachable!");
+    alert("Destination is unreachable!");
     setDisabled(false);
   }
 };
@@ -389,6 +389,11 @@ const aStar = async (grid, setGrid, source, destination, setDisabled) => {
   while (!minHeap.isEmpty()) {
     let minNode = minHeap.remove();
 
+    if (minNode.f == Infinity) {
+      setDisabled(false);
+      return alert("Destination is unreachable!");
+    }
+
     if (minNode.row == destination.x && minNode.col == destination.y) {
       break;
     }
@@ -433,7 +438,7 @@ const aStar = async (grid, setGrid, source, destination, setDisabled) => {
 
   if (endNode.cameFrom == null) {
     setDisabled(false);
-    alert("Destination is Unreachable!");
+    alert("Destination is unreachable!");
     return [];
   }
 
